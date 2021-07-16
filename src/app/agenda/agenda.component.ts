@@ -6,7 +6,6 @@ import { timer } from 'rxjs';
 import { finalize, findIndex } from 'rxjs/operators';
 import { Agenda } from '../models/agenda-model';
 import { AjaxResponse } from '../models/ajax-response-model';
-import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-agenda',
