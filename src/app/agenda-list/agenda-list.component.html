@@ -1,0 +1,68 @@
+
+
+
+<div class="col-md-8">
+
+  <div>
+    <h2>Agenda List</h2>
+  </div>
+  <div class="container-fluid" id="content-body">
+    <div class="form-row">
+
+    </div>
+    <br>
+    <button class="btn btn-primary" (click)="gotoCreateAgenda()">Add New &nbsp;<i
+        class="fa fa-plus-circle"></i></button>
+
+    <br>
+    <br>
+    <div>
+      <table class="table  table-bordered table-striped">
+        <thead>
+          <tr>
+            <th><b>S/N</b></th>
+            <th><b>NAME</b></th>
+            <th><b>TITLE</b></th>
+            <th><b>DETAILS</b></th>
+            <th><b>DATE</b></th>
+            <th><b>COMPLETED</b></th>
+            <th><b>ACTION</b></th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr *ngFor="let agenda of agendaList | slice: (tablePage - 1) *
+              tablePageSize: (tablePage - 1) * tablePageSize + tablePageSize;
+              let i = index" [class.strikeThrough]="agenda.isCompleted">
+
+            <td>{{ i + 1 }}</td>
+            <td>{{ agenda?.name || "N/A" }}</td>
+            <td>{{ agenda?.title || "N/A" }}</td>
+            <td>{{ (agenda.details ) || 'N/A' }}</td>
+            <td>{{ (agenda?.date | date ) || 'N/A' }}</td>
+            <td>{{ agenda?.isCompleted === true ? "YES" : "NO" }}</td>
+
+            <td><button style="width: 12exs; " class="btn btn-success"
+                (click)="gotoEditAgenda(agenda)"><span>Edit&nbsp;<i class="fa fa-edit"></i></span></button>
+              <button (click)="deleteAgenda(agenda)" style="width: 12exs; margin-left: 20px;"
+                class="btn btn-danger">Delete &nbsp; <i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-center" *ngIf="isLoading">
+        <!-- <app-progress-spinner style="margin-left: 50%"></app-progress-spinner> -->
+      </div>
+
+      <div *ngIf="agendaList.length === 0"
+        class="alert alert-danger text-center alert-dismissible text-center fade show">
+        <strong></strong>No Record.
+        <button type="button" class="close" data-dismiss="alert"></button>
+      </div>
+
+
+    </div>
+
+  </div>
+
+</div>

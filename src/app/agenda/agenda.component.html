@@ -1,0 +1,96 @@
+
+
+
+<div tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createModalCenterTitle">
+          <button (click)="goBack()" class="btn btn-secondary"><span><i class="fa fa-arrow-left"></i>
+              Back</span></button> {{title}} Agenda
+        </h5>
+      </div>
+      <div class="modal-body">
+        <form #form [formGroup]="agendaForm">
+          <table class="table table-bordered table-striped table-hover">
+
+            <tbody>
+              <tr>
+                <td><strong>Name</strong></td>
+                <td> <input class="form-control ng-untouched ng-pristine ng-valid" type="text" placeholder="Name"
+                    formControlName="name" />
+                  <div *ngIf="
+                  (agendaForm.controls.name.errors &&
+                  agendaForm.controls.name.touched)
+              " class="alert alert-danger">
+                    <i class="fa fa-info-circle"></i> &nbsp; Please enter Name
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Title</strong></td>
+                <td> <input class="form-control ng-untouched ng-pristine ng-valid" type="text"
+                    placeholder="Title e.g ..." formControlName="title" />
+                  <div *ngIf="
+                  (agendaForm.controls.title.errors &&
+                  agendaForm.controls.title.touched)
+              " class="alert alert-danger">
+                    <i class="fa fa-info-circle"></i> &nbsp; Please enter Title
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Date</strong></td>
+                <td> <input class="form-control ng-untouched ng-pristine ng-valid" type="date" formControlName="date" />
+
+                  <div *ngIf="
+                  (agendaForm.controls.date.errors &&
+                  agendaForm.controls.date.touched)
+              " class="alert alert-danger">
+                    <i class="fa fa-info-circle"></i> &nbsp; Please enter a Date
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Details</strong></td>
+                <td> <textarea class="form-control ng-untouched ng-pristine ng-valid" type="text"
+                    placeholder="e.g Meeting with Drake " formControlName="details"> </textarea>
+
+                  <div *ngIf="
+                  (agendaForm.controls.details.errors &&
+                  agendaForm.controls.details.touched)
+              " class="alert alert-danger">
+                    <i class="fa fa-info-circle"></i> &nbsp; Please enter the details
+                  </div>
+                </td>
+              </tr>
+
+              <tr *ngIf="isUpdate">
+                <td><strong>Completed</strong>
+                  &nbsp;&nbsp;
+                </td>
+                <td>
+                  <label class="switch">
+                    <input checked=istaxable formControlName="isCompleted" type="checkbox">
+                    <span class="slider round"></span>
+                  </label>
+                </td>
+              </tr>
+
+
+
+            </tbody>
+          </table>
+        </form>
+
+        <div>
+
+          <button (click)="createUpdateAgenda()" class="btn btn-secondary">
+            <span>{{actionButtonText}} &nbsp; <i class="fa fa-{{actionButtonIcon}}"></i> </span></button>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
