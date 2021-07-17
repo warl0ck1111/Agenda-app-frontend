@@ -21,13 +21,20 @@ import { AjaxResponse } from '../models/ajax-response-model';
 })
 export class AgendaListComponent implements OnInit {
 
-  GET_ALL_AGENDAS_URL:string = "http://localhost:8080/api/agenda/get-all";
-  DELETE_AGENDAS_URL:string = "http://localhost:8080/api/agenda/delete/";
+  GET_ALL_AGENDAS_URL: string = "http://localhost:8080/api/agenda/get-all";
+  DELETE_AGENDAS_URL: string = "http://localhost:8080/api/agenda/delete/";
 
   agendaList: Agenda[] = []
 
   importAgendas: Agenda[] = this.agendaList;
   exportAgendas: Agenda[] = [];
+
+
+  spinnerEnabled = false;
+  keys?: string[] | null;
+  dataSheet: any = new Subject();
+  @ViewChild('inputFile') inputFile!: ElementRef;
+  isExcelFile!: boolean;
 
 
   alertMsg!: string;
@@ -40,9 +47,7 @@ export class AgendaListComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private excelService: ExcelService,
-  ) {
-    sessionStorage.removeItem('id');
-  }
+  ) { }
 
 
   ngOnInit(): void {
@@ -57,9 +62,6 @@ export class AgendaListComponent implements OnInit {
 
     })
   }
-
-
-
 
   gotoCreateAgenda() {
     this.router.navigate(['/create'])
@@ -86,9 +88,7 @@ export class AgendaListComponent implements OnInit {
 
         // console.log(response);
 
-
-
-      },(error:AjaxResponse<null>)=>{
+      }, (error: AjaxResponse<null>) => {
         this.showAlert(error.message as string, "warning", "warning")
       })
   }
@@ -99,14 +99,10 @@ export class AgendaListComponent implements OnInit {
 
   }
 
-
-
-  spinnerEnabled = false;
-  keys?: string[] | null;
-  dataSheet: any = new Subject();
-  @ViewChild('inputFile') inputFile!: ElementRef;
-  isExcelFile!: boolean;
-
+  /**
+   * import .xls|.xlsx document
+   * @param evt
+   */
   onChange(evt: any) {
     this.agendaList = [];
     let data: any[], header: any;
@@ -133,8 +129,8 @@ export class AgendaListComponent implements OnInit {
         // console.log(data);
 
         this.agendaList = data
-        this.agendaList.map(x=>{
-          if(typeof x.isCompleted == 'string'){
+        this.agendaList.map(x => {
+          if (typeof x.isCompleted == 'string') {
 
             x.isCompleted = JSON.parse(<string>(x.isCompleted))
             // console.log(x.isCompleted);
@@ -162,14 +158,14 @@ export class AgendaListComponent implements OnInit {
   }
 
 
-  showAlert(msg: string, style: string, icon:string) {
+  showAlert(msg: string, style: string, icon: string) {
     this.alertIcon = icon;
     this.alertMsg = msg;
     this.style = style || 'info';
     this.show = true;
     timer(5000).subscribe(() => (this.show = false));
     return false;
-}
+  }
 
 
 }
