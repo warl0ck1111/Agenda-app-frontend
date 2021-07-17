@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { timer } from 'rxjs';
-import { finalize, findIndex } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { Agenda } from '../models/agenda-model';
 import { AjaxResponse } from '../models/ajax-response-model';
 
@@ -22,6 +21,10 @@ export class AgendaComponent implements OnInit, OnDestroy {
   agenda!: Agenda | null
   isUpdate: boolean = false;
 
+
+  CREATE_AGENDA_URL: string = "http://localhost:8080/api/agenda/create";
+  UPDATE_AGENDA_URL: string = "http://localhost:8080/api/agenda/update";
+
   alertMsg!: string;
   style!: string;
   show: boolean = false;
@@ -29,11 +32,9 @@ export class AgendaComponent implements OnInit, OnDestroy {
   alertIcon!: string;
 
   constructor(private http: HttpClient,
-    private router: Router,
     private fb: FormBuilder) {
     this.initializeForm()
   }
-
 
   ngOnInit(): void {
 
@@ -60,12 +61,9 @@ export class AgendaComponent implements OnInit, OnDestroy {
       date: ['', Validators.required],
       isCompleted: [false],
       title: ['', Validators.required],
-      isImportant: [false],
-      isDeleted: [false],
 
     })
   }
-
 
   initializeFormwithData() {
     this.agendaForm = this.fb.group({
@@ -75,12 +73,9 @@ export class AgendaComponent implements OnInit, OnDestroy {
       date: [this.agenda?.date, Validators.required],
       isCompleted: [this.agenda?.isCompleted],
       title: [this.agenda?.title, Validators.required],
-      isImportant: [this.agenda?.isImportant],
-      isDeleted: [this.agenda?.isDeleted],
 
     })
   }
-
 
   createUpdateAgenda() {
 
@@ -93,52 +88,51 @@ export class AgendaComponent implements OnInit, OnDestroy {
 
   }
 
-
   createAgenda() {
+    // console.log(this.agendaForm.value);
 
-
-    if(!this.agendaForm.status){
-      this.check()
-      this.canPerformAction = false
-      return;
-    }
-    console.log(this.agendaForm.value);
-
-    this.http.post<Agenda>("http://localhost:8080/api/agenda/create", this.agendaForm.value)
+    this.http.post<Agenda>(this.CREATE_AGENDA_URL, this.agendaForm.value)
       .pipe(finalize(() => {
-        this.router.navigate(['/home'])
+
       }))
       .subscribe((response: any) => {
+        if (response.status == "OK") {
+          this.agendaForm.reset();
+          this.showAlert('Agenda Created Successfully', "warning", "info-circle")
+          timer(2500).subscribe(() => {
+            this.goBack();
+          });
 
+
+        }
       },
-        (error: any) => {
-
+        (error: AjaxResponse<null>) => {
+          this.showAlert(<string>(error?.message), "warning", "info-circle")
         })
   }
 
 
-  canPerformAction:boolean = false;
   updateAgenda() {
-
-    if(!this.agendaForm.status){
-      this.canPerformAction = false
-      return;
-    }
-
-    console.log(this.agendaForm.value);
-
-
-    this.http.put<Agenda>("http://localhost:8080/api/agenda/update", this.agendaForm.value)
+    // console.log(this.agendaForm.value);
+    this.http.put<Agenda>(this.UPDATE_AGENDA_URL, this.agendaForm.value)
       .pipe(finalize(() => {
-        this.goBack()
+
       }))
       .subscribe((response: any) => {
 
+        if (response.status == "OK") {
+          this.agendaForm.reset();
+          this.showAlert('Update Successful', "warning", "info-circle")
+          timer(300).subscribe(() => {
+            this.goBack();
+
+          });
 
 
+        }
       },
-        (error: any) => {
-
+        (error: AjaxResponse<null>) => {
+          this.showAlert(<string>(error?.message), "warning", "info-circle")
         })
   }
 
@@ -147,12 +141,15 @@ export class AgendaComponent implements OnInit, OnDestroy {
     window.history.back();
   }
 
-  check(){
-    console.log((this.agendaForm));
-
+  //custom toast view
+  showAlert(msg: string, style: string, icon: string) {
+    this.alertIcon = icon;
+    this.alertMsg = msg;
+    this.style = style || 'info';
+    this.show = true;
+    timer(5000).subscribe(() => (this.show = false));
+    return false;
   }
-
-
 
 
 
