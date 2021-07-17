@@ -1,21 +1,43 @@
-export interface Agenda {
+export class Agenda {
 
-  id: string;
+  id?: string;
 
-  name: string;
+  name?: string;
 
-  title: string;
+  title?: string;
 
-  date: Date;
+  date?: string;
 
-  details: string;
+  details?: string;
 
-  isCompleted: boolean;
+  isCompleted?: boolean;
 
-  time: Date;
+  time?: string;
 
-  isImportant: boolean;
 
-  isDeleted: boolean;
+  constructor(opts?: Partial<Agenda>) {
+        if (opts?.id != null) {
+            this.id = opts.id;
+        }
+        if (opts?.name != null) {
+            this.name = opts.name;
+        }
+        if (opts?.title != null) {
+            this.title = opts.title;
+        }
+        if (opts?.date != null) {
+            this.date = opts.date;
+        }
+        if (opts?.details != null) {
+            this.details = opts.details;
+        }
+        if (opts?.isCompleted != null) {
+            this.isCompleted = opts.isCompleted;
+        }
+        if (opts?.time != null) {
+            this.time = opts.time;
+        }
+
+    }
 
 }
