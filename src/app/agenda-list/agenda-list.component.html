@@ -1,21 +1,44 @@
 
+<div class="jumbotron">
+  <h1 class="display-4">Agenda </h1>
+  <p class="lead">Manage all your agendas in one place.</p>
+  <hr class="my-4">
+  <p class="lead">
+    <a routerLink="/create" class="btn btn-primary btn-lg" href="#" role="button">New Agenda&nbsp;<i
+      class="fa fa-plus-circle"></i></a>
+  </p>
+</div>
+<div class="col-md-12">
+
+  <!-- the toast view -->
+  <span style="
+  position:fixed;
+  float: right;
+  z-index: 100000;
+  margin-left: 70%;
+
+  " *ngIf="show" id="alertz" class="alert alert-{{style}} alert-dismissible fade show" role="alert">
+  <strong><span><i class="fa fa-{{alertIcon}}"></i></span>&nbsp;{{alertMsg}}</strong>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+  </button>
+</span>
+  <!-- the end toast view -->
 
 
-<div class="col-md-8">
 
-  <div>
+
+  <div class="center-text ">
     <h2>Agenda List</h2>
   </div>
-  <div class="container-fluid" id="content-body">
+  <div class="container-fluid " id="content-body">
     <div class="form-row">
 
     </div>
     <br>
-    <button class="btn btn-primary" (click)="gotoCreateAgenda()">Add New &nbsp;<i
-        class="fa fa-plus-circle"></i></button>
 
     <br>
-    <br>
+  <br>
     <div>
       <table class="table  table-bordered table-striped">
         <thead>
@@ -31,8 +54,7 @@
         </thead>
         <tbody>
 
-          <tr *ngFor="let agenda of agendaList | slice: (tablePage - 1) *
-              tablePageSize: (tablePage - 1) * tablePageSize + tablePageSize;
+          <tr *ngFor="let agenda of agendaList
               let i = index" [class.strikeThrough]="agenda.isCompleted">
 
             <td>{{ i + 1 }}</td>
@@ -49,10 +71,10 @@
             </td>
           </tr>
         </tbody>
+
+
       </table>
-      <div class="text-center" *ngIf="isLoading">
-        <!-- <app-progress-spinner style="margin-left: 50%"></app-progress-spinner> -->
-      </div>
+
 
       <div *ngIf="agendaList.length === 0"
         class="alert alert-danger text-center alert-dismissible text-center fade show">
@@ -61,8 +83,62 @@
       </div>
 
 
+      <button class="btn btn-secondary">
+        <label>
+          <span class="mdi mdi-file-export"> </span>
+          <i class="fas fa-file-import"> </i>&nbsp;Import Data
+          <input hidden type="file" (change)="onChange($event)" #inputFile multiple="false">
+        </label>
+      </button>
+      <br><br>
+
+      <button (click)="exportData('myTable')" class="btn btn-primary"><i class="fas fa-file-export"></i> &nbsp; Export
+        Data</button>
+
     </div>
 
   </div>
 
+
+  <!-- the actual table being converted to xlxs -->
+  <table hidden id="myTable" class="table  table-bordered table-striped">
+    <thead>
+      <tr>
+        <th><b>id</b></th>
+        <th><b>name</b></th>
+        <th><b>title</b></th>
+        <th><b>details</b></th>
+        <th><b>date</b></th>
+        <th><b>isCompleted</b></th>
+
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr *ngFor="let agenda of agendaList; let i = index">
+
+        <td>{{ agenda?.id}}</td>
+        <td>{{ agenda?.name || "N/A" }}</td>
+        <td>{{ agenda?.title || "N/A" }}</td>
+        <td>{{ (agenda.details ) || 'N/A' }}</td>
+        <td>{{ (agenda?.date ) || 'N/A' }}</td>
+        <td>{{ agenda?.isCompleted }}</td>
+      </tr>
+    </tbody>
+  </table>
+
 </div>
+
+
+
+<!-- Footer -->
+<footer class="page-footer font-small blue pt-4">
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2021 Copyright:
+    <a href="#"> agenda.com</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
